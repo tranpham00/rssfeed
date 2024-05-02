@@ -10,7 +10,7 @@
 
   <name>rssfeed</name>
   <!-- FIXME change it to the project's website -->
-  <url>https://www.nasa.gov/rss/dyn/breaking_news.rss</url>
+  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -29,6 +29,11 @@
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
       <version>1.0</version>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.9</version>
   </dependency>
   </dependencies>
 
