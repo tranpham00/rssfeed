@@ -1,8 +1,7 @@
 package edu.francistuttle;
 
-import java.io.File;
 import java.io.InputStream;
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,45 +16,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
-
 public class App 
 {
     public static void main( String[] args ) throws Exception
     {   
-        Document document = readXMLDocumentFromFile("C:\\Users\\ap1101037\\Desktop\\github-tran\\rssfeed\\src\\main\\java\\edu\\francistuttle\\nasa.xml");
-
-        //Verify XML Content
-
-        //Here comes the root node
-        Element root = document.getDocumentElement();
-        System.out.println(root.getNodeName());
-
-        //Get all channels
-        NodeList nList = document.getElementsByTagName("item");
-        System.out.println("============================");
-
-
-        for (int temp = 0; temp < nList.getLength(); temp++) 
-        {
-        Node node = nList.item(temp);
-    
-            if (node.getNodeType() == Node.ELEMENT_NODE) 
-            {
-                //Print each computer's detail
-                Element eElement = (Element) node;
-                System.out.println("\nTitle : " + eElement.getElementsByTagName("title"));
-                System.out.println("Link : " + eElement.getElementsByTagName("link").item(0).getTextContent());
-                System.out.println("Publish Date : " + eElement.getElementsByTagName("pubDate").item(0).getTextContent());
-
-                //NodeList cList = eElement.getElementsByTagName("item");
-            }
-        }
-
-
         // try
         // {
         //     File path = new File("C:\\Users\\ap1101037\\Desktop\\github-tran\\rssfeed\\src\\nasa.xml");
@@ -79,6 +43,8 @@ public class App
         // {
         //     System.out.println("Error: " + e.getMessage());
         // }
+
+        parseRssFeed("https://www.nasa.gov/rss/dyn/breaking_news.rss", 2);
     }
 
     public static Document readXMLDocumentFromFile(String fileNameWithPath) throws Exception 
@@ -105,6 +71,45 @@ public class App
             System.out.println("Hosed: " + e.toString());
         }
         return null;
+    }
+
+    public static ArrayList<RSSItemClass> parseRssFeed(String url, int maxItems) throws Exception{
+        ArrayList<RSSItemClass> rssFeed = new ArrayList<RSSItemClass>();
+        
+        Document document = readXMLDocumentFromFile("C:\\Users\\ap1101037\\Desktop\\github-tran\\rssfeed\\src\\main\\java\\edu\\francistuttle\\nasa.xml");
+
+        //Verify XML Content
+
+        //Here comes the root node
+        Element root = document.getDocumentElement();
+        System.out.println(root.getNodeName());
+
+        //Get all channels
+        NodeList nList = document.getElementsByTagName("item");
+        System.out.println("============================");
+
+
+        for (int temp = 0; temp < maxItems; temp++) 
+        {
+            Node node = nList.item(temp);
+    
+            if (node.getNodeType() == Node.ELEMENT_NODE) 
+            {
+                //Print each computer's detail
+                Element eElement = (Element) node;
+                System.out.println("\nTitle : " + eElement.getElementsByTagName("title"));
+                System.out.println("Link : " + eElement.getElementsByTagName("link").item(0).getTextContent());
+                System.out.println("Publish Date : " + eElement.getElementsByTagName("pubDate").item(0).getTextContent());
+
+                //NodeList cList = eElement.getElementsByTagName("item");
+                RSSItemClass rss = new RSSItemClass(eElement.getElementsByTagName("title").item(0).getTextContent(),
+                 eElement.getElementsByTagName("link").item(0).getTextContent(),
+                  "", "", eElement.getElementsByTagName("pubDate").item(0).getTextContent());
+
+                rssFeed.add(rss);
+            }
+        }
+        return rssFeed;
     }
 }
 
